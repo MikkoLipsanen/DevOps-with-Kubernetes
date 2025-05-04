@@ -1,1 +1,0 @@
-$ kubectl create deployment kube-project-v01-dep --image=mlipsan/kube-project:v0.1
