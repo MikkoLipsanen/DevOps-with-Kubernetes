@@ -1,6 +1,9 @@
 const { randomBytes } = require('node:crypto')
+const express = require('express')
 
-function randomString(length) {
+const app = express()
+
+const randomString = (length) => {
   if (length % 2 !== 0) {
     length++
   }
@@ -9,8 +12,20 @@ function randomString(length) {
 }
 
 const string = randomString(20)
+var current = ""
 
 setInterval(() => {
     const now = new Date().toISOString()
-    console.log(now + ': ' + string)
-}, 5000);
+    current = now + ': ' + string
+    console.log(current)
+}, 5000)
+
+app.get('/', (req, res) => {
+  res.send(current)
+})
+
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
+})
