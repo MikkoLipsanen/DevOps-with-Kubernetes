@@ -1,17 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: log-output-dep
+  name: writer-reader-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: log-output
+      app: writer-reader
   template:
     metadata:
       labels:
-        app: log-output
+        app: writer-reader
     spec:
+      volumes: # Define volume
+        - name: shared-timestamp
+          emptyDir: {}
       containers:
-        - name: log-output
-          image: mlipsan/log-output:107
+        - name: log-writer
+          image: mlipsan/log-output-writer:1.10
+          volumeMounts: # Mount volume
+          - name: shared-timestamp
+            mountPath: /usr/src/app/files
+        - name: log-reader
+          image: mlipsan/log-output-reader:1.10
+          volumeMounts: # Mount volume
+          - name: shared-timestamp
+            mountPath: /usr/src/app/files

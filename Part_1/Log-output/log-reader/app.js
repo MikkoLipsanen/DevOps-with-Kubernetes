@@ -1,5 +1,7 @@
 const { randomBytes } = require('node:crypto')
 const express = require('express')
+const fs = require('node:fs')
+const path = require('path')
 
 const app = express()
 
@@ -12,16 +14,13 @@ const randomString = (length) => {
 }
 
 const string = randomString(20)
-var current = ""
 
-setInterval(() => {
-    const now = new Date().toISOString()
-    current = now + ': ' + string
-    console.log(current)
-}, 5000)
+const directory = path.join('/', 'usr', 'src', 'app', 'files')
+const filePath = path.join(directory, 'now.txt')
 
 app.get('/', (req, res) => {
-  res.send(current)
+  const now = fs.readFileSync(filePath, 'utf8')
+  res.send(now + ': ' + string)
 })
 
 const PORT = process.env.PORT || 3000
