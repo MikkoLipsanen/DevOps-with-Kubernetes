@@ -16,11 +16,19 @@ const randomString = (length) => {
 const string = randomString(20)
 
 const directory = path.join('/', 'usr', 'src', 'app', 'files')
-const filePath = path.join(directory, 'now.txt')
+const nowPath = path.join(directory, 'now.txt')
+const pongPath = path.join(directory, 'pong.txt')
+let now = ''
+let pongs = '0'
 
 app.get('/', (req, res) => {
-  const now = fs.readFileSync(filePath, 'utf8')
-  res.send(now + ': ' + string)
+  if (fs.existsSync(nowPath)) {
+    now = fs.readFileSync(nowPath, 'utf8')
+  } 
+  if (fs.existsSync(pongPath)) {
+    pongs = fs.readFileSync(pongPath, 'utf8')
+  }
+  res.send(now + ': ' + string + '\n' + 'Ping \ Pongs: ' + pongs)
 })
 
 const PORT = process.env.PORT || 3000

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: writer-reader-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: writer-reader
+  template:
+    metadata:
+      labels:
+        app: writer-reader
+    spec:
+      volumes:
+        - name: log-pingpong-pv
+          persistentVolumeClaim:
+            claimName: log-pingpong-claim 
+      containers:
+        - name: log-writer
+          image: mlipsan/log-output-writer:1.10
+          volumeMounts: # Mount volume
+          - name: log-pingpong-pv
+            mountPath: /usr/src/app/files
+        - name: log-reader
+          image: mlipsan/log-output-reader:1.11.0
+          volumeMounts:
+          - name: log-pingpong-pv
+            mountPath: /usr/src/app/files

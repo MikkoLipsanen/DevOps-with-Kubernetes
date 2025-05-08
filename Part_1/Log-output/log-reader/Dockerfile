@@ -2,12 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package* ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
