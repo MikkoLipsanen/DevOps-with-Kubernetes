@@ -19,5 +19,5 @@ setInterval(() => {
       if (err) {
         console.error(err);
       } 
-    });
+    })
 }, 5000)

@@ -1,17 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kube-project-dep
+  name: project-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kube-project
+      app: project
   template:
     metadata:
       labels:
-        app: kube-project
+        app: project
     spec:
+      volumes: # Define volume
+        - name: shared-image
+          emptyDir: {}
       containers:
-        - name: kube-project
-          image: mlipsan/kube-project:v0.3
+        - name: project-backend
+          image: mlipsan/project-backend:v0.7
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
+        - name: project-frontend
+          image: mlipsan/project-frontend:0.70
+          ports:
+          - containerPort: 5173
+          volumeMounts: # Mount volume
+          - name: shared-image
+            mountPath: /usr/src/app/files
