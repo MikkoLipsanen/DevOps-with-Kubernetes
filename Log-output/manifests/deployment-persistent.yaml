@@ -12,17 +12,18 @@ spec:
       labels:
         app: writer-reader
     spec:
-      volumes: # Define volume
-        - name: shared-timestamp
-          emptyDir: {}
+      volumes:
+        - name: log-pingpong-pv
+          persistentVolumeClaim:
+            claimName: log-pingpong-claim 
       containers:
         - name: log-writer
-          image: mlipsan/log-output-writer:1.10
+          image: mlipsan/log-output-writer:v2.01
           volumeMounts: # Mount volume
-          - name: shared-timestamp
+          - name: log-pingpong-pv
             mountPath: /usr/src/app/files
         - name: log-reader
-          image: mlipsan/log-output-reader:1.10
-          volumeMounts: # Mount volume
-          - name: shared-timestamp
+          image: mlipsan/log-output-reader:v2.01
+          volumeMounts:
+          - name: log-pingpong-pv
             mountPath: /usr/src/app/files
