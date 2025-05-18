@@ -1,11 +1,27 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3000/api/todos'
+const backendUrl = 'http://localhost:8081'
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+console.log(backendUrl)
+
+const getAll = async () => {
+  try {
+    const response = await axios.get(`${backendUrl}/api/todos`)
+    return response.data
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const create = async (newTodo) => {
+  try {
+    const response = await axios.post(`${backendUrl}/api/todos`,  {todo: newTodo})
+    return response.data
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default {
-  getAll
+  getAll,
+  create
 }

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-frontend-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-frontend
+  template:
+    metadata:
+      labels:
+        app: project-frontend
+    spec:
+      volumes: 
+        - name: image-volume
+          emptyDir: {}
+      containers:
+        - name: project-frontend
+          image: mlipsan/project-frontend:1.000
+          volumeMounts: 
+          - name: image-volume
+            mountPath: /usr/src/app/files
