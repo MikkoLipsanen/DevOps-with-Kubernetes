@@ -13,23 +13,3 @@ export default defineConfig({
   }
 })
     
-  //server: {
-    //proxy: {
-    //  '/api': {
-    //    target: 'http://project-backend-svc:3000',
-    //    changeOrigin: true,
-    //    rewrite: (path) => path.replace(/^\/api/, ''),
-    //    secure: false, // Disable SSL verification
-    //    ws: true, // Proxy websockets
-    //    configure: (proxy, options) => {
-    //      // Proxy event handling
-    //      proxy.on('error', (err, req, res) => {
-    //        console.log('proxy error', err)
-    //      })
-    //      proxy.on('proxyReq', (proxyReq, req, res) => {
-    //        console.log('Sending Request to the Target:', req.url)
-    //      })
-    //    }
-    //  }
-    //},
-    
