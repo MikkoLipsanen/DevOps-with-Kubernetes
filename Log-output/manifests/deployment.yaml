@@ -16,6 +16,9 @@ spec:
       volumes: # Define volume
         - name: shared-timestamp
           emptyDir: {}
+        - name: config-volume 
+          configMap:
+              name: log-config
       containers:
         - name: log-writer
           image: mlipsan/log-output-writer:v2.01
@@ -23,7 +26,17 @@ spec:
           - name: shared-timestamp
             mountPath: /usr/src/app/files
         - name: log-reader
-          image: mlipsan/log-output-reader:v201
+          image: mlipsan/log-output-reader:2.06
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-config
+                  key: MESSAGE
           volumeMounts: # Mount volume
           - name: shared-timestamp
             mountPath: /usr/src/app/files
+          - name: config-volume
+            mountPath: /usr/src/app/config
+            readOnly: true
+            

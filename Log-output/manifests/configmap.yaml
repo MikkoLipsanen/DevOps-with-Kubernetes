@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: log-config
+  namespace: app-space
+data:
+  MESSAGE: "hello world"
+  information.txt: |
+    "this text is from file"

@@ -1,14 +1,5 @@
-const { randomBytes } = require('node:crypto')
 const path = require('path')
 const fs = require('node:fs')
-
-const randomString = (length) => {
-  if (length % 2 !== 0) {
-    length++
-  }
-
-  return randomBytes(length / 2).toString('hex')
-}
 
 const directory = path.join('/', 'usr', 'src', 'app', 'files')
 const filePath = path.join(directory, 'now.txt')

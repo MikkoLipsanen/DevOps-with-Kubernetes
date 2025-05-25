@@ -4,6 +4,8 @@ const fs = require('node:fs')
 const path = require('path')
 const axios = require('axios')
 
+const app = express()
+
 const pingpongUrl = 'http://pingpong-svc:2345'
 
 const getPong = async() => {
@@ -15,7 +17,14 @@ const getPong = async() => {
   }
 }
 
-const app = express()
+const getFile = (path) => {
+  if (fs.existsSync(path)) {
+    file = fs.readFileSync(path, 'utf8')
+    return file
+  } else {
+    console.log(`File at ${path} not found`)
+  }
+}
 
 const randomString = (length) => {
   if (length % 2 !== 0) {
@@ -27,17 +36,27 @@ const randomString = (length) => {
 
 const string = randomString(20)
 
-const directory = path.join('/', 'usr', 'src', 'app', 'files')
-const nowPath = path.join(directory, 'now.txt')
+const fileDirectory = path.join('/', 'usr', 'src', 'app', 'files')
+const confDirectory = path.join('/', 'usr', 'src', 'app', 'config')
+const nowPath = path.join(fileDirectory, 'now.txt')
+const infoPath = path.join(confDirectory, 'information.txt')
+
+const message = process.env.MESSAGE
 
 let now = ''
+let info = ''
 
 app.get('/', async (req, res) => {
-  if (fs.existsSync(nowPath)) {
-    now = fs.readFileSync(nowPath, 'utf8')
-  } 
+  now = getFile(nowPath)
+  info = getFile(infoPath)
+
   const pongs = await getPong()
-  res.send(now + ': ' + string + '\n' + 'Ping \ Pongs: ' + pongs)
+
+  const infoString = 'file content: ' + info
+  const messageString = 'env variable: MESSAGE=' + message 
+  const timeString = now + ': ' + string
+  const pongString = 'Ping \ Pongs: ' + pongs
+  res.send(infoString + '\n' + messageString + '\n' + timeString + '\n' + pongString)
 })
 
 const PORT = process.env.PORT || 3000
