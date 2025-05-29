@@ -13,12 +13,6 @@ spec:
       labels:
         app: project-frontend
     spec:
-      volumes: 
-        - name: image-volume
-          emptyDir: {}
       containers:
         - name: project-frontend
-          image: mlipsan/project-frontend:1.000
-          volumeMounts: 
-          - name: image-volume
-            mountPath: /usr/src/app/files
+          image: mlipsan/project-frontend:2.08

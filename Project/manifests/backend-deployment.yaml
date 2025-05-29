@@ -15,4 +15,22 @@ spec:
     spec:
       containers:
         - name: project-backend
-          image: mlipsan/project-backend:1.0
+          image: mlipsan/project-backend:2.08
+          env:
+          - name: POSTGRES_USER
+            value: "me"
+          - name: DB_HOST
+            value: "project-postgres-svc"
+          - name: DB_PORT
+            value: "5432"
+          - name: POSTGRES_DB
+            value: "project"
+          - name: TABLE
+            value: "todos"
+          - name: COLUMN
+            value: "text"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: project-secret
+                key: POSTGRES_PASSWORD

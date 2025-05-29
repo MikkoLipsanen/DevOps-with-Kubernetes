@@ -25,6 +25,10 @@ spec:
             value: "5432"
           - name: POSTGRES_DB
             value: "pingpong"
+          - name: TABLE
+            value: "counter"
+          - name: COLUMN
+            value: "count"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:

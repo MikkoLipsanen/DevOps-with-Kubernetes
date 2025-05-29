@@ -1,8 +1,6 @@
 import axios from 'axios'
 const backendUrl = 'http://localhost:8081'
 
-console.log(backendUrl)
-
 const getAll = async () => {
   try {
     const response = await axios.get(`${backendUrl}/api/todos`)
