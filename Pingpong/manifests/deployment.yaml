@@ -15,4 +15,18 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: mlipsan/pingpong:2.01
+          image: mlipsan/pingpong:2.070
+          env:
+          - name: POSTGRES_USER
+            value: "me"
+          - name: DB_HOST
+            value: "postgres-svc"
+          - name: DB_PORT
+            value: "5432"
+          - name: POSTGRES_DB
+            value: "pingpong"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pingpong-secret
+                key: POSTGRES_PASSWORD
