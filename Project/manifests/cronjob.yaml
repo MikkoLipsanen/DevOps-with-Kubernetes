@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob
+            image: mlipsan/cronjob:2.09
+            imagePullPolicy: IfNotPresent
+            env:
+              - name: POSTGRES_USER
+                value: "me"
+              - name: DB_HOST
+                value: "project-postgres-svc"
+              - name: DB_PORT
+                value: "5432"
+              - name: POSTGRES_DB
+                value: "project"
+              - name: TABLE
+                value: "todos"
+              - name: COLUMN
+                value: "text"
+              - name: POSTGRES_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: project-secret
+                    key: POSTGRES_PASSWORD
+          restartPolicy: OnFailure
