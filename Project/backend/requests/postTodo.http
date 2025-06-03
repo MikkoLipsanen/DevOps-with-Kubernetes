@@ -1,6 +1,6 @@
-POST http://localhost:3000/api/todos
+POST http://localhost:8081/api/todos
 Content-Type: application/json
 
 {
-    "todo": "Jokutodojoo"
+    "todo": "The limit method returns the original string if its length is shorter than or equal to the given limit. Otherwise, the method cuts off the string value and returns a substring with a length of the given character limit."
 }

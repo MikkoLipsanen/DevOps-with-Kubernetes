@@ -53,12 +53,16 @@ app.get('/api/todos', async(request, response) => {
 });
 
 app.post('/api/todos', async(request, response) => {
-  const todo = request.body.todo
-  const client = await getClient();
-  const newTodo = await insertValue(client, todo)
-  console.log('new: ' + newTodo)
-  client.end();
-  response.send(newTodo)
+  const todo = request.body.todo;
+  if (todo.length <= 140) {
+    const client = await getClient();
+    const newTodo = await insertValue(client, todo)
+    console.log('new: ' + newTodo)
+    client.end();
+    response.send(newTodo)
+  } else {
+    console.log('Todo exceeds allowed maximum length.')
+  }
 });
 
 const PORT = process.env.PORT || 3000
