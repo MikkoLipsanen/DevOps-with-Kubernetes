@@ -15,7 +15,13 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: mlipsan/pingpong:2.070
+          image: mlipsan/pingpong:4.1
+          readinessProbe:
+            initialDelaySeconds: 10 
+            periodSeconds: 5 
+            httpGet:
+               path: /healthz
+               port: 3000
           env:
           - name: POSTGRES_USER
             value: "me"

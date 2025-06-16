@@ -66,6 +66,13 @@ app.get('/', async(req, res) => {
   client.end();
 })
 
+app.get('/healthz', async(req, res) => {
+  const client = await getClient();
+  const status = client ? 200 : 500
+  console.log(`Received a request to healthz and responding with status ${status}`)
+  res.sendStatus(status)
+})
+
 // Start the server
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

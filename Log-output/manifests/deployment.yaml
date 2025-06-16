@@ -26,7 +26,13 @@ spec:
           - name: shared-timestamp
             mountPath: /usr/src/app/files
         - name: log-reader
-          image: mlipsan/log-output-reader:2.06
+          image: mlipsan/log-output-reader:4.1
+          readinessProbe:
+            initialDelaySeconds: 10 
+            periodSeconds: 5 
+            httpGet:
+               path: /healthz
+               port: 3000
           env:
             - name: MESSAGE
               valueFrom:

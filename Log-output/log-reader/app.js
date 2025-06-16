@@ -61,6 +61,13 @@ app.get('/', async (req, res) => {
 
 const PORT = process.env.PORT || 3000
 
+app.get('/healthz', async(req, res) => {
+  const pongs = await getPong()
+  const status = pongs ? 200 : 500
+  console.log(`Received a request to healthz and responding with status ${status}`)
+  res.sendStatus(status)
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
 })
