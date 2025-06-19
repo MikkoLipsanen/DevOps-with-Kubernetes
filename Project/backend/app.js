@@ -63,7 +63,14 @@ app.post('/api/todos', async(request, response) => {
   } else {
     console.log('Todo exceeds allowed maximum length.')
   }
-});
+})
+
+app.get('/healthz', async(req, res) => {
+  const client = await getClient();
+  const status = client ? 200 : 500
+  console.log(`Received a request to healthz and responding with status ${status}`)
+  res.sendStatus(status)
+})
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

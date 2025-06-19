@@ -15,7 +15,19 @@ spec:
     spec:
       containers:
         - name: project-backend
-          image: mlipsan/project-backend:2.10
+          image: mlipsan/project-backend:4.2
+          readinessProbe:
+            initialDelaySeconds: 10 
+            periodSeconds: 5 
+            httpGet:
+               path: /healthz
+               port: 3000
+          livenessProbe:
+            initialDelaySeconds: 20 
+            periodSeconds: 5 
+            httpGet:
+               path: /healthz
+               port: 3000
           env:
           - name: POSTGRES_USER
             value: "me"
