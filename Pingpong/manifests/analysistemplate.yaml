@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: cpu-rate
+  namespace: app-space
+spec:
+  metrics:
+  - name: cpu-rate
+    initialDelay: 5m
+    successCondition: result < 0.50
+    provider:
+      prometheus:
+        address: http://kube-prometheus-stack-1748-prometheus.prometheus.svc.cluster.local:9090
+        query: |
+          scalar(sum(rate(container_cpu_usage_seconds_total{namespace="app-space"}[5m])))

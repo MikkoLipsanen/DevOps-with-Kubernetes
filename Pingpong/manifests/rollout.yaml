@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: pingpong-dep
   namespace: app-space
@@ -14,15 +14,21 @@ spec:
         app: pingpong
     spec:
       containers:
-        - name: pingpong
-          image: mlipsan/pingpong:4.1
-          readinessProbe:
-            initialDelaySeconds: 10 
-            periodSeconds: 5 
-            httpGet:
-               path: /healthz
-               port: 3000
-          env:
+      - name: pingpong
+        image: mlipsan/pingpong:4.1
+        readinessProbe:
+          initialDelaySeconds: 10 
+          periodSeconds: 5 
+          httpGet:
+            path: /healthz
+            port: 3000
+        livenessProbe:
+          initialDelaySeconds: 10 
+          periodSeconds: 5 
+          httpGet:
+            path: /healthz
+            port: 3000
+        env:
           - name: POSTGRES_USER
             value: "me"
           - name: DB_HOST
@@ -40,3 +46,9 @@ spec:
               secretKeyRef:
                 name: pingpong-secret
                 key: POSTGRES_PASSWORD
+  strategy:
+    canary:
+      steps:
+      - analysis:
+          templates:
+          - templateName: cpu-rate  
