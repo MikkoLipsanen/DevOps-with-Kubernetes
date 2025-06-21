@@ -10,7 +10,7 @@ spec:
         spec:
           containers:
           - name: cronjob
-            image: mlipsan/cronjob:2.09
+            image: mlipsan/cronjob:04.50
             imagePullPolicy: IfNotPresent
             env:
               - name: POSTGRES_USER
@@ -23,8 +23,10 @@ spec:
                 value: "project"
               - name: TABLE
                 value: "todos"
-              - name: COLUMN
+              - name: TEXT_COLUMN
                 value: "text"
+              - name: DONE_COLUMN
+                value: "done"
               - name: POSTGRES_PASSWORD
                 valueFrom:
                   secretKeyRef:

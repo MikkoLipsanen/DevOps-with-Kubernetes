@@ -8,7 +8,8 @@ app.use(cors())
 app.use(express.json())
 
 const table = process.env.TABLE;
-const col = process.env.COLUMN;
+const textCol = process.env.TEXT_COLUMN;
+const doneCol = process.env.DONE_COLUMN;
 
 const getClient = async () => {
   const client = new Client({
@@ -22,9 +23,11 @@ const getClient = async () => {
   return client;
 };
 
-const insertValue = async(client, value) => {
-  const text = `INSERT INTO ${table}(${col}) VALUES ($1) RETURNING *`
-  const res = await client.query(text, [value])
+const insertValue = async(client, todo) => {
+  const text = `INSERT INTO ${table}(${textCol}, ${doneCol}) VALUES ($1, $2) RETURNING *`
+  const values = [todo[textCol], todo[doneCol]]
+  const res = await client.query(text, values)
+  client.end();
   return res.rows[0]
 };
 
@@ -32,7 +35,8 @@ const createTable = async (client) => {
   const createTableText = `
     CREATE TABLE IF NOT EXISTS ${table} (
       id SERIAL PRIMARY KEY,
-      ${col} TEXT 
+      ${textCol} TEXT,
+      ${doneCol} BOOLEAN 
     );`
   await client.query(createTableText)
 };
@@ -47,17 +51,21 @@ const getTodos = async(client) => {
 app.get('/api/todos', async(request, response) => {
   const client = await getClient();
   const todos = await getTodos(client);
-  console.log(todos);
+  console.log(todos)
   client.end();
   response.json(todos)
 });
 
 app.post('/api/todos', async(request, response) => {
-  const todo = request.body.todo;
-  if (todo.length <= 140) {
+  const todo = {
+    [textCol]: request.body.todo,
+    [doneCol]: false
+  }
+  
+  if (todo[textCol].length <= 140) {
     const client = await getClient();
     const newTodo = await insertValue(client, todo)
-    console.log('new: ' + newTodo)
+    console.log(newTodo)
     client.end();
     response.send(newTodo)
   } else {
@@ -65,12 +73,24 @@ app.post('/api/todos', async(request, response) => {
   }
 })
 
+app.put('/api/todos/:id', async (req, res) => {
+  const client = await getClient();
+  const newTodo = req.body.todo
+  const id = req.params.id
+  const update = `UPDATE ${table} SET ${doneCol} = $1 WHERE id = $2`;
+  const values = [newTodo.done, id]
+  const result = await client.query(update, values);
+  client.end();
+  res.json(newTodo);
+});
+
 app.get('/healthz', async(req, res) => {
   const client = await getClient();
   const status = client ? 200 : 500
   console.log(`Received a request to healthz and responding with status ${status}`)
   res.sendStatus(status)
 })
+
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {

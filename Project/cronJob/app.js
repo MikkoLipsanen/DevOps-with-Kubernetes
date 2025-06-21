@@ -3,7 +3,8 @@ const { Client } = require("pg");
 require('dotenv').config();
 
 const table = process.env.TABLE;
-const col = process.env.COLUMN;
+const textCol = process.env.TEXT_COLUMN;
+const doneCol = process.env.DONE_COLUMN;
 
 const wikiUrl = "https://en.wikipedia.org/wiki/Special:Random"
 
@@ -23,15 +24,17 @@ const createTable = async (client) => {
   const createTableText = `
     CREATE TABLE IF NOT EXISTS ${table} (
       id SERIAL PRIMARY KEY,
-      ${col} TEXT 
+      ${textCol} TEXT,
+      ${doneCol} BOOLEAN  
     );`
   await client.query(createTableText)
 };
 
-const insertValue = async(client, value) => {
+const insertValue = async(client, todo) => {
   await createTable(client);
-  const text = `INSERT INTO ${table}(${col}) VALUES ($1) RETURNING *`
-  const res = await client.query(text, [value])
+  const text = `INSERT INTO ${table}(${textCol}, ${doneCol}) VALUES ($1, $2) RETURNING *`
+  const values = [todo[textCol], todo[doneCol]]
+  const res = await client.query(text, values)
   return res.rows[0]
 };
 
@@ -47,9 +50,13 @@ const getUrl = async() => {
 
 const saveUrl = async() => {
   const url = await getUrl();
-  const todo = `Read ${url}`;
+  const todo = {
+    [textCol]: `Read ${url}`,
+    [doneCol]: false
+  }
   const client = await getClient();
   const newTodo = await insertValue(client, todo)
+  client.end();
 }
 
 saveUrl()

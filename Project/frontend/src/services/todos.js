@@ -19,7 +19,17 @@ const create = async (newTodo) => {
   }
 }
 
+const update = async (id, newTodo) => {
+  try {
+    const response = await axios.put(`${backendUrl}/api/todos/${id}`, {todo: newTodo})
+    return response.data
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   getAll,
-  create
+  create,
+  update
 }

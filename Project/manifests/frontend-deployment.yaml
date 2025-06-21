@@ -15,4 +15,4 @@ spec:
     spec:
       containers:
         - name: project-frontend
-          image: mlipsan/project-frontend:2.08
+          image: mlipsan/project-frontend:04.50

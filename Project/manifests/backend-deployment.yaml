@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: project-backend
-          image: mlipsan/project-backend:4.2
+          image: mlipsan/project-backend:04.5
           readinessProbe:
             initialDelaySeconds: 10 
             periodSeconds: 5 
@@ -39,8 +39,10 @@ spec:
             value: "project"
           - name: TABLE
             value: "todos"
-          - name: COLUMN
+          - name: TEXT_COLUMN
             value: "text"
+          - name: DONE_COLUMN
+            value: "done"
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
